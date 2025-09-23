@@ -15,11 +15,6 @@ build/
 !build/cache/
 !build/reports/
 !build/test-results/
-build.gradle
-gradlew
-gradlew.bat
-gradle-*.properties
-*.gradle
 
 
 # Ignore Gradle GUI config
@@ -66,8 +61,5 @@ Thumbs.db
 
 ### Sensitive Files ###
 .env
-application-*.yml
-application.properties
-!application-local.yml
-application.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij
