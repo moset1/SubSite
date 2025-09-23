@@ -5,7 +5,7 @@ spring:
     application:
       name: gateway
     config:
-      import: "optional:configserver:http://admin:1234@localhost:9000" # Config 서버 주소
+      import: "optional:configserver:http://admin:1234@localhost:9000"
 
     cloud:
       gateway:
@@ -14,20 +14,18 @@ spring:
           # 1. Public Routes: 인증이 필요 없는 모든 공개 API 경로
           # =================================================================
           - id: public-routes
-            uri: lb://USER-SERVICE # 모든 공개 인증 관련 API는 USER-SERVICE로 라우팅
+            uri: lb://USER
             predicates:
-              # 여기에 해당하는 경로들은 토큰 검사 없이 통과합니다.
               - Path=/login, /user, /user/exist, /jwt/exchange, /jwt/refresh
-              # 이 경로들은 모두 POST 메소드이므로, 명시하여 보안을 강화합니다.
+              # 이 경로들은 모두 POST 메소드이므로, 명시하여 보안을 강화
               - Method=POST
 
           # =================================================================
           # 2. Private User Routes: 인증이 필요한 사용자 관련 API 경로
           # =================================================================
           - id: private-user-routes
-            uri: lb://USER-SERVICE
+            uri: lb://USER
             predicates:
-              # /user 경로에 대해 GET, PUT, DELETE 메소드는 인증이 필요합니다.
               - Path=/user
               - Method=GET,PUT,DELETE
             filters:
@@ -38,7 +36,7 @@ spring:
           # 3. Private Logout Route: 인증이 필요한 로그아웃 경로
           # =================================================================
           - id: private-logout-route
-            uri: lb://USER-SERVICE
+            uri: lb://USER
             predicates:
               - Path=/logout
               - Method=POST
@@ -50,7 +48,7 @@ spring:
           # 4. (예시) 다른 서비스로 가는 모든 Private 경로
           # =================================================================
           - id: order-service-routes
-            uri: lb://ORDER-SERVICE
+            uri: lb://ORDER
             predicates:
               # /api/orders/ 로 시작하는 모든 요청은 인증이 필요합니다.
               - Path=/api/orders/**

@@ -13,7 +13,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity // <-- 이 어노테이션을 추가합니다.
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
