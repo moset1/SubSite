@@ -1,0 +1,19 @@
+plugins {
+    // 루트에는 플러그인을 정의만 하고 적용은 하지 않습니다 (하위 프로젝트에서 적용)
+
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+}
+
+allprojects {
+    group = 'com.semocompany'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        set('springCloudVersion', "2025.0.0")
+    }
+}
