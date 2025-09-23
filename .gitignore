@@ -63,3 +63,11 @@ Thumbs.db
 .env
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij
+
+# --- Local Configuration Files ---
+# Never commit local application configuration files
+/SubSiteActuator/src/main/resources/application.properties
+/SubSiteConfigServer/src/main/resources/application.properties
+/SubSiteEurekaServer/src/main/resources/application.properties
+/SubsiteGateway/src/main/resources/application.yml
+/UserService/src/main/resources/application.properties
