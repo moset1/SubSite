@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f3f4f6;
+  color: #1f2937; /* gray-800 */
+}
+
+/* Custom reusable button styles can be defined here if needed */
+.btn {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.btn:hover:not(:disabled) {
+    @apply -translate-y-0.5 shadow-md;
+}
