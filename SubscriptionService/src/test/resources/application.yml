@@ -1,0 +1,26 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  rabbitmq:
+    # Disable RabbitMQ for tests as it's not needed for most unit/integration tests
+    # We can enable it for specific tests if needed.
+    host: localhost
+    port: 5672
+    listener:
+      simple:
+        auto-startup: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
