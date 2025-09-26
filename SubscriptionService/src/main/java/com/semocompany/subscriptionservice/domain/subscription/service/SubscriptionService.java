@@ -2,6 +2,8 @@ package com.semocompany.subscriptionservice.domain.subscription.service;
 
 import com.semocompany.subscriptionservice.domain.category.entity.Category;
 import com.semocompany.subscriptionservice.domain.category.repository.CategoryRepository;
+import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTask;
+import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTaskPublisher;
 import com.semocompany.subscriptionservice.domain.subscription.dto.SubscriptionDTO;
 import com.semocompany.subscriptionservice.domain.subscription.entity.Subscription;
 import com.semocompany.subscriptionservice.domain.subscription.repository.SubscriptionRepository;
@@ -72,7 +74,7 @@ public class SubscriptionService {
         return SubscriptionDTO.Response.from(subscriptions);
     }
 
-    public void checkUpdateForUser(UUID userId) {
+    public void checkUpdatesForUser(UUID userId) {
         List<Subscription> subscriptions = subscriptionRepository.findByCategory_UserId(userId);
         for (Subscription sub : subscriptions) {
 
