@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,17 +15,17 @@ import lombok.NoArgsConstructor;
 public class Category{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false, name = "user_id")
-    private Long userId;
+    private UUID userId;  // User의 UUID
 
     @Builder
-    public Category(String name, Long userId) {
+    public Category(String name, UUID userId) {
         this.name = name;
         this.userId = userId;
     }

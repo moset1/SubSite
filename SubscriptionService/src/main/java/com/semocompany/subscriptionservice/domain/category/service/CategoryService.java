@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,8 @@ public class CategoryService {
 
 
     @Transactional
-    public CategoryDTO.Response createCategory(CategoryDTO.CreateRequest request, Long userId) {
+    public CategoryDTO.Response createCategory(CategoryDTO.CreateRequest request, UUID userId) {
+
 
         Category category = Category.builder()
                 .name(request.getName())
@@ -28,13 +30,13 @@ public class CategoryService {
         return CategoryDTO.Response.from(savedCategory);
     }
 
-    public List<CategoryDTO.Response> getUserCategories(String userId) {
+    public List<CategoryDTO.Response> getUserCategories(UUID userId) {
         List<Category> categories = categoryRepository.findByUserId(userId);
         return CategoryDTO.Response.from(categories);
     }
 
     @Transactional
-    public void deleteCategory(Long categoryId, String userId) {
+    public void deleteCategory(UUID categoryId, UUID userId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다." + categoryId));
 

@@ -24,11 +24,11 @@ public class CategoryDTO {
 
     @Getter
     public static class Response {
-        private final Long id;
+        private final String id;
         private final String name;
 
         @Builder
-        public Response(Long id, String name) {
+        public Response(String id, String name) {
             this.id = id;
             this.name = name;
         }
@@ -36,7 +36,7 @@ public class CategoryDTO {
         // DTO로의 변환을 DTO 클래스에게 위임하기
         public static Response from(Category category) {
             return Response.builder()
-                    .id(category.getId())
+                    .id(String.valueOf(category.getId()))
                     .name(category.getName())
                     .build();
         }
