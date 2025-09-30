@@ -19,6 +19,8 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+
+    // 카테고리 생성
     @PostMapping
     public ResponseEntity<CategoryDTO .Response> createCategory(
             @Valid @RequestBody CategoryDTO.CreateRequest request,
@@ -27,6 +29,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 카테고리 목록 요청
     @GetMapping
     public ResponseEntity<List<CategoryDTO.Response>> getUserCategories(
             @RequestHeader("X-USER-ID") UUID userId) {
@@ -35,6 +38,7 @@ public class CategoryController {
     }
 
 
+    // 카테고리 삭제
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
         @PathVariable UUID categoryId,
