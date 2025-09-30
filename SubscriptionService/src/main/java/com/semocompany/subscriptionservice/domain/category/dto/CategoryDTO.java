@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CategoryDTO {
@@ -24,11 +25,11 @@ public class CategoryDTO {
 
     @Getter
     public static class Response {
-        private final String id;
+        private final UUID id;
         private final String name;
 
         @Builder
-        public Response(String id, String name) {
+        public Response(UUID id, String name) {
             this.id = id;
             this.name = name;
         }
@@ -36,7 +37,7 @@ public class CategoryDTO {
         // DTO로의 변환을 DTO 클래스에게 위임하기
         public static Response from(Category category) {
             return Response.builder()
-                    .id(String.valueOf(category.getId()))
+                    .id(category.getId())
                     .name(category.getName())
                     .build();
         }
