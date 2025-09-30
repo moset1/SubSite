@@ -35,6 +35,7 @@ public class RssParser {
     }
 
     private Article toArticle(SyndEntry entry) {
-        return new Article(entry.getTitle(), entry.getLink());
+        String description = entry.getDescription() == null ? "" : entry.getDescription().getValue();
+        return new Article(entry.getTitle(), entry.getLink(), description);
     }
 }
