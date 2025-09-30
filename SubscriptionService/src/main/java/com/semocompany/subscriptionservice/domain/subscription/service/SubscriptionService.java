@@ -37,6 +37,8 @@ public class SubscriptionService {
                 .url(request.getUrl())
                 .keywords(request.getKeywords())
                 .type(request.getType())
+                .postLinkSelector(request.getPostLinkSelector())
+                .nextPageSelector(request.getNextPageSelector())
                 .build();
 
         Subscription savedSubscription = subscriptionRepository.save(subscription);

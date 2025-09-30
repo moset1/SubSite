@@ -41,15 +41,22 @@ public class Subscription {
     @Column(name = "last_checked_at")
     private LocalDateTime lastCheckedAt;
 
+    @Column(name = "post_link_selector")
+    private String postLinkSelector;
+
+    @Column(name = "next_page_selector")
+    private String nextPageSelector;
+
     @Builder
-    public Subscription(Category category, String url, List<String> keywords, SubscriptionType type) {
+    public Subscription(Category category, String url, List<String> keywords, SubscriptionType type, String postLinkSelector, String nextPageSelector) {
         this.category = category;
         this.url = url;
         this.keywords = keywords;
         this.type = type;
+        this.postLinkSelector = postLinkSelector;
+        this.nextPageSelector = nextPageSelector;
         this.lastCheckedAt = LocalDateTime.now();
     }
-
     public void updateKeywords(List<String> newKeywords) {
         this.keywords = newKeywords;
 

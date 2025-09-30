@@ -30,6 +30,9 @@ public class SubscriptionDTO {
         @Size(min = 1, message = "최소 하나의 키워드가 필요합니다.")
         private List<String> keywords;
 
+        private String postLinkSelector;
+        private String nextPageSelector;
+
         private SubscriptionType type = SubscriptionType.CRAWL;
     }
 
@@ -39,6 +42,8 @@ public class SubscriptionDTO {
         @NotNull
         @Size(min = 1, message = "최소 하나의 키워드가 필요합니다.")
         private List<String> keywords;
+        private String postLinkSelector;
+        private String nextPageSelector;
     }
 
 
@@ -49,15 +54,19 @@ public class SubscriptionDTO {
         private final String url;
         private final List<String> keywords;
         private final SubscriptionType type;
+        private String postLinkSelector;
+        private String nextPageSelector;
+
 
         @Builder
-        public Response(UUID id, UUID categoryId, String url, List<String> keywords, SubscriptionType type, UUID id1, UUID categoryId1, String url1, List<String> keywords1, SubscriptionType type1) {
-
+        public Response(UUID id, UUID categoryId, String url, List<String> keywords, SubscriptionType type, String postLinkSelector, String nextPageSelector) {
             this.id = id;
             this.categoryId = categoryId;
             this.url = url;
             this.keywords = keywords;
             this.type = type;
+            this.postLinkSelector = postLinkSelector;
+            this.nextPageSelector = nextPageSelector;
         }
 
         public static Response from(Subscription subscription) {
@@ -67,6 +76,8 @@ public class SubscriptionDTO {
                     .url(subscription.getUrl())
                     .keywords(subscription.getKeywords())
                     .type(subscription.getType())
+                    .postLinkSelector(subscription.getPostLinkSelector())
+                    .nextPageSelector(subscription.getNextPageSelector())
                     .build();
         }
 

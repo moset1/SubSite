@@ -18,6 +18,7 @@ public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
 
+    // 구독 추가
     @PostMapping
     public ResponseEntity<SubscriptionDTO.Response> createSubscription(
             @Valid @RequestBody SubscriptionDTO.CreateRequest request,
@@ -27,6 +28,7 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 구독 정보 요청
     @GetMapping
     public ResponseEntity<List<SubscriptionDTO.Response>> getUserSubscriptions(
             @RequestHeader("X-USER-ID") UUID userId) {
@@ -34,6 +36,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(responses);
     }
 
+    // 구독 요청 업데이트
     @PutMapping("/{subscriptionId}")
     public ResponseEntity<SubscriptionDTO.Response> updateSubscription(
             @PathVariable UUID subscriptionId,
@@ -43,6 +46,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(response);
     }
 
+    // 구독 삭제
     @DeleteMapping("/{subscriptionId}")
     public ResponseEntity<Void> deleteSubscription(
             @PathVariable UUID subscriptionId,
@@ -51,6 +55,7 @@ public class SubscriptionController {
         return ResponseEntity.noContent().build();
     }
 
+    // 최근 업데이트 일시 확인
     @PostMapping("/check-updates")
     public ResponseEntity<Void> checkUpdates(
             @RequestHeader("X-USER-ID") UUID userId) {
