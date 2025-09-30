@@ -57,9 +57,10 @@ public class Subscription {
         this.nextPageSelector = nextPageSelector;
         this.lastCheckedAt = LocalDateTime.now();
     }
-    public void updateKeywords(List<String> newKeywords) {
-        this.keywords = newKeywords;
-
+    public void update(List<String> keywords, String postLinkSelector, String nextPageSelector) {
+        this.keywords = keywords;
+        this.postLinkSelector = postLinkSelector;
+        this.nextPageSelector = nextPageSelector;
     }
 
     public void updateLastCheckedTime() {
