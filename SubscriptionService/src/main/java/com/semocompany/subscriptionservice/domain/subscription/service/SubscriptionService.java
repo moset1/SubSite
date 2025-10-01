@@ -55,7 +55,7 @@ public class SubscriptionService {
             throw new SecurityException("이 구독에 대한 권한이 없습니다.");
         }
 
-        subscription.updateKeywords(request.getKeywords());
+        subscription.update(request.getKeywords(), request.getPostLinkSelector(), request.getNextPageSelector());
         return SubscriptionDTO.Response.from(subscription);
     }
 

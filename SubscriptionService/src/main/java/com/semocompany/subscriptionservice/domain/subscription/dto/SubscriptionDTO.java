@@ -33,7 +33,7 @@ public class SubscriptionDTO {
         private String postLinkSelector;
         private String nextPageSelector;
 
-        private SubscriptionType type = SubscriptionType.CRAWL;
+        private final SubscriptionType type = SubscriptionType.CRAWL;
     }
 
     @Getter
@@ -44,6 +44,13 @@ public class SubscriptionDTO {
         private List<String> keywords;
         private String postLinkSelector;
         private String nextPageSelector;
+
+        @Builder
+        public UpdateRequest(List<String> newKeywords, String newPostLinkSelector, String newNextPageSelector) {
+            this.keywords = newKeywords;
+            this.postLinkSelector = newPostLinkSelector;
+            this.nextPageSelector = newNextPageSelector;
+        }
     }
 
 
@@ -54,8 +61,8 @@ public class SubscriptionDTO {
         private final String url;
         private final List<String> keywords;
         private final SubscriptionType type;
-        private String postLinkSelector;
-        private String nextPageSelector;
+        private final String postLinkSelector;
+        private final String nextPageSelector;
 
 
         @Builder
