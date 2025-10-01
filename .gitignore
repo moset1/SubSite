@@ -50,3 +50,6 @@ bin/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# 로컬 설정 파일 제외
+application-local.properties
