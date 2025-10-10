@@ -29,6 +29,7 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService extends DefaultOAuth2UserService implements UserDetailsService {
@@ -52,7 +53,7 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
 
     // 자체 로그인 회원 가입
     @Transactional
-    public Long addUser(UserRequestDTO dto) { // table id 리턴
+    public UUID addUser(UserRequestDTO dto) { // table id 리턴
 
         // username이 이미 존재하는지 검증하기.
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -91,7 +92,7 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
 
     // 자체 로그인 회원 정보 수정
     @Transactional
-    public Long updateUser(UserRequestDTO dto) throws AccessDeniedException {
+    public UUID updateUser(UserRequestDTO dto) throws AccessDeniedException {
 
         // 본인만 수정 가능 검증
         String sessionUsername = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @Tag(name = "User API", description = "사용자 정보 관련 API")
 @RestController
@@ -57,11 +58,11 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 아이디일 경우 (서비스 로직에서 예외 처리 시)", content = @Content)
     })
     @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> joinApi (
+    public ResponseEntity<Map<String, UUID>> joinApi (
             @Validated(UserRequestDTO.addGroup.class) @RequestBody UserRequestDTO dto
     ) {
-        Long id = userService.addUser(dto);
-        Map<String, Long> responseBody = Collections.singletonMap("userEntityId", id);
+        UUID id = userService.addUser(dto);
+        Map<String, UUID> responseBody = Collections.singletonMap("userEntityId", id);
         return ResponseEntity.status(201).body(responseBody);
     }
 
@@ -93,7 +94,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
     @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> updateUserApi(
+    public ResponseEntity<UUID> updateUserApi(
             @Validated(UserRequestDTO.updateGroup.class) @RequestBody UserRequestDTO dto
     ) throws AccessDeniedException {
         return ResponseEntity.status(200).body(userService.updateUser(dto));
