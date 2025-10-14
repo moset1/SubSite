@@ -1,0 +1,91 @@
+version: '3.8'
+
+# 로컬 개발 환경을 위한 Docker Compose 설정
+# 각 클라이언트 서비스는 Config 서버의 주소만 알고 있으며, 나머지 모든 설정은 Config 서버를 통해 주입받습니다.
+
+networks:
+  subsite-network:
+    driver: bridge
+
+services:
+  config-server:
+    image: moset1/subsite-config-service:latest
+    container_name: config-server
+    networks:
+      - subsite-network
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_SECURITY_USER_NAME=${CONFIG_SERVER_USERNAME}
+      - SPRING_SECURITY_USER_PASSWORD=${CONFIG_SERVER_PASSWORD}
+
+  eureka-server:
+    image: moset1/subsite-eureka-service:latest
+    container_name: eureka-server
+    networks:
+      - subsite-network
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_SECURITY_USER_NAME=${EUREKA_SERVER_USERNAME}
+      - SPRING_SECURITY_USER_PASSWORD=${EUREKA_SERVER_PASSWORD}
+
+  gateway-service:
+    image: moset1/subsite-gateway-service:latest
+    container_name: gateway-service
+    networks:
+      - subsite-network
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:9000
+      - SPRING_CLOUD_CONFIG_USERNAME=${CONFIG_SERVER_USERNAME}
+      - SPRING_CLOUD_CONFIG_PASSWORD=${CONFIG_SERVER_PASSWORD}
+    depends_on:
+      - config-server
+      - eureka-server
+
+  user-service:
+    image: moset1/subsite-user-service:latest
+    container_name: user-service
+    networks:
+      - subsite-network
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:9000
+      - SPRING_CLOUD_CONFIG_USERNAME=${CONFIG_SERVER_USERNAME}
+      - SPRING_CLOUD_CONFIG_PASSWORD=${CONFIG_SERVER_PASSWORD}
+    depends_on:
+      - config-server
+      - eureka-server
+
+  subscription-service:
+    image: moset1/subsite-subscription-service:latest
+    container_name: subscription-service
+    networks:
+      - subsite-network
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:9000
+      - SPRING_CLOUD_CONFIG_USERNAME=${CONFIG_SERVER_USERNAME}
+      - SPRING_CLOUD_CONFIG_PASSWORD=${CONFIG_SERVER_PASSWORD}
+    depends_on:
+      - config-server
+      - eureka-server
+
+  actuator-service:
+    image: moset1/subsite-actuator-service:latest
+    container_name: actuator-service
+    networks:
+      - subsite-network
+    ports:
+      - "9001:9001"
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:9000
+      - SPRING_CLOUD_CONFIG_USERNAME=${CONFIG_SERVER_USERNAME}
+      - SPRING_CLOUD_CONFIG_PASSWORD=${CONFIG_SERVER_PASSWORD}
+    depends_on:
+      - config-server
+      - eureka-server
