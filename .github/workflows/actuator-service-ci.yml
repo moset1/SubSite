@@ -1,0 +1,97 @@
+name: actuator-service-ci.yml
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'SubSiteActuator/**'
+
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'SubSiteActuator/**'
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x SubSiteActuator/gradlew
+
+      - name: Build with Gradle
+        run: ./SubSiteActuator/gradlew -p SubSiteActuator clean build
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: actuator-service-jar
+          path: SubSiteActuator/build/libs/*.jar
+
+  docker-push:
+
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: actuator-service-jar
+          path: SubSiteActuator/build/libs/
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./SubSiteActuator
+          push: true
+          tags: moset1/subsite-actuator-service:${{ github.sha }}
+
+  deploy:
+
+    needs: docker-push
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Deploy to EC2 Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USERNAME }}
+          key: ${{ secrets.GCP_PRIVATE_KEY }}
+
+          script: |
+            docker pull moset1/subsite-actuator-service:${{ github.sha }}
+            
+            docker stop actuator-service-container || true
+            docker rm actuator-service-container || true
+            
+            docker run -d --name actuator-service-container -p 9001:9001 \
+            -e "CONFIG_SERVER_URI=http://config-server.internal" \
+            -e "CONFIG_SERVER_USERNAME=${{ secrets.CONFIG_SERVER_USERNAME }}" \
+            -e "CONFIG_SERVER_PASSWORD=${{ secrets.CONFIG_SERVER_PASSWORD }}" \
+            -e "EUREKA_SERVER_USERNAME=${{ secrets.EUREKA_SERVER_USERNAME }}" \
+            -e "EUREKA_SERVER_PASSWORD=${{ secrets.EUREKA_SERVER_PASSWORD }}" \
+              moset1/subsite-actuator-service:${{ github.sha }}
