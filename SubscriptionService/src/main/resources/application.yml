@@ -1,7 +1,4 @@
 
-server:
-  port: 0
-
 spring:
   application:
     name: subscription
@@ -11,12 +8,3 @@ spring:
     config:
       username: ${CONFIG_SERVER_USERNAME}
       password: ${CONFIG_SERVER_PASSWORD}
-
-
-# Eureka
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://${eureka_server_username}:${eureka_server_password}@localhost:8761/eureka
