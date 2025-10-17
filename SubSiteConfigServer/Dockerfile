@@ -38,7 +38,7 @@ COPY --from=builder --chown=appuser:appuser /home/gradle/src/build/libs/*.jar ap
 USER appuser
 
 ## 운영 안정성을 위한 HEALTHCHECK 추가
-#HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+# HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 #  CMD curl -f http://${SERVICE_INNER_IP}:9000/actuator/health || exit 1
 
 # 포트 명시
