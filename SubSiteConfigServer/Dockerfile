@@ -41,7 +41,6 @@ USER appuser
 # HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 #  CMD curl -f http://${SERVICE_INNER_IP}:9000/actuator/health || exit 1
 
-
 # 포트 명시
 EXPOSE 9000
 
