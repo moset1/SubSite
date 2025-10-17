@@ -44,5 +44,6 @@ USER appuser
 # 포트 명시
 EXPOSE 9000
 
+
 # 최종 실행 명령어
 ENTRYPOINT ["java","-jar","app.jar"]
