@@ -1,5 +1,5 @@
 # =======================================================
-# 1. 빌드 스테이지
+# 1. 빌드(Build) 스테이지
 # =======================================================
 FROM gradle:8.5-jdk17-alpine AS builder
 
@@ -10,7 +10,7 @@ WORKDIR /home/gradle/src
 COPY --chown=gradle:gradle build.gradle settings.gradle ./
 COPY --chown=gradle:gradle gradle ./gradle
 
-# 'build' 대신 'dependencies'를 사용하여 의존성만 명시적으로 다운로드
+# 의존성만 명시적으로 다운로드
 RUN gradle dependencies --no-daemon
 
 # 소스 코드 복사
@@ -28,8 +28,7 @@ FROM eclipse-temurin:17-jre-jammy
 # 작업 디렉토리 설정
 WORKDIR /app
 
-#  보안 강화를 위해 non-root 사용자 생성
-# appuser 그룹과 appuser 사용자 생성
+# 보안 강화를 위해 non-root 사용자 생성
 RUN addgroup --system appuser && adduser --system --ingroup appuser appuser
 
 # 빌드 스테이지에서 생성된 .jar 파일을 복사하고, 소유자를 appuser로 지정
@@ -38,10 +37,9 @@ COPY --from=builder --chown=appuser:appuser /home/gradle/src/build/libs/*.jar ap
 # 생성한 non-root 사용자로 전환
 USER appuser
 
-# 운영 안정성을 위한 HEALTHCHECK 추가
-# 30초마다 5초 타임아웃으로 3번 재시도하여 health 엔드포인트를 확인
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD curl -f http://localhost:9001/actuator/health || exit 1
+## 운영 안정성을 위한 HEALTHCHECK 추가
+#HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+#  CMD curl -f http://${SERVICE_INNER_IP}:9000/actuator/health || exit 1
 
 # 포트 명시
 EXPOSE 9000
