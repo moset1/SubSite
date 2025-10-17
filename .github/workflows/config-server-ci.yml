@@ -75,12 +75,13 @@ jobs:
     environment: development
 
     steps:
-      - name: Deploy to EC2 Server
+      - name: Deploy to GCP Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GCP_SSH_PASSPHRASE }}
 
           script: |
             docker pull moset1/subsite-config-service:${{ github.sha }}
@@ -91,4 +92,5 @@ jobs:
             docker run -d --name config-service-container -p 9000:9000 \
             -e "SPRING_SECURITY_USER_NAME=${{ secrets.CONFIG_SERVER_USERNAME }}" \
             -e "SPRING_SECURITY_USER_PASSWORD=${{ secrets.CONFIG_SERVER_PASSWORD }}" \
+            -e "SPRING_CLOUD_CONFIG_SERVER_GIT_PRIVATE_KEY=${{ secrets.SPRING_CLOUD_CONFIG_SERVER_GIT_PRIVATE_KEY }}" \
               moset1/subsite-config-service:${{ github.sha }}

@@ -75,12 +75,13 @@ jobs:
     environment: development
 
     steps:
-      - name: Deploy to EC2 Server
+      - name: Deploy to GCP Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GCP_SSH_PASSPHRASE }}
 
           script: |
             docker pull moset1/subsite-user-service:${{ github.sha }}
@@ -95,8 +96,10 @@ jobs:
             -e "EUREKA_SERVER_USERNAME=${{ secrets.EUREKA_SERVER_USERNAME }}" \
             -e "EUREKA_SERVER_PASSWORD=${{ secrets.EUREKA_SERVER_PASSWORD }}" \
             -e "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" \
+            -e "SERVICE_INNER_IP=${{ secrets.SERVICE_INNER_IP }}" \
             -e "SUBSCRIPTION_DATASOURCE_USERNAME=${{ secrets.SUBSCRIPTION_DATASOURCE_USERNAME }}" \
             -e "SUBSCRIPTION_DATASOURCE_PASSWORD=${{ secrets.SUBSCRIPTION_DATASOURCE_PASSWORD }}" \
+            -e "DATASOURCE_IPADDRESS=${{ secrets.DATASOURCE_IPADDRESS }}" \
             -e "SUBSCRIPTION_RABBITMQ_USERNAME=${{ secrets.SUBSCRIPTION_RABBITMQ_USERNAME }}" \
             -e "SUBSCRIPTION_RABBITMQ_PASSWORD=${{ secrets.SUBSCRIPTION_RABBITMQ_PASSWORD }}" \
               moset1/subsite-user-service:${{ github.sha }}

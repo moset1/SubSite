@@ -75,12 +75,13 @@ jobs:
     environment: development
 
     steps:
-      - name: Deploy to EC2 Server
+      - name: Deploy to GCP Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GCP_SSH_PASSPHRASE }}
 
           script: |
             docker pull moset1/subsite-actuator-service:${{ github.sha }}
