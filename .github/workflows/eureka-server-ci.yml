@@ -84,12 +84,14 @@ jobs:
           passphrase: ${{ secrets.GCP_SSH_PASSPHRASE }}
 
           script: |
+            
+            docker network create subsite-network || true
             docker pull moset1/subsite-eureka-service:${{ github.sha }}
             
             docker stop eureka-service-container || true
             docker rm eureka-service-container || true
             
-            docker run -d --name eureka-service-container -p 8761:8761 \
+            docker run -d --name eureka-service-container --network subsite-network -p 8761:8761 \
             -e "SPRING_SECURITY_USER_NAME=${{ secrets.EUREKA_SERVER_USERNAME }}" \
             -e "SPRING_SECURITY_USER_PASSWORD=${{ secrets.EUREKA_SERVER_PASSWORD }}" \
               moset1/subsite-eureka-service:${{ github.sha }}

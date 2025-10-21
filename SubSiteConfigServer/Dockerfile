@@ -1,6 +1,6 @@
-# =======================================================
-# 1. 빌드(Build) 스테이지
-# =======================================================
+
+# 1. 빌드 스테이지
+
 FROM gradle:8.5-jdk17-alpine AS builder
 
 # 작업 디렉토리 설정
@@ -20,9 +20,9 @@ COPY --chown=gradle:gradle src ./src
 RUN gradle build --no-daemon -x test
 
 
-# =======================================================
-# 2. 패키징(Packaging) 스테이지
-# =======================================================
+
+# 2. 패키징 스테이지
+
 FROM eclipse-temurin:17-jre-jammy
 
 # 작업 디렉토리 설정
@@ -36,11 +36,6 @@ COPY --from=builder --chown=appuser:appuser /home/gradle/src/build/libs/*.jar ap
 
 # 생성한 non-root 사용자로 전환
 USER appuser
-
-## 운영 안정성을 위한 HEALTHCHECK 추가
-# HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-#  CMD curl -f http://${SERVICE_INNER_IP}:9000/actuator/health || exit 1
-
 
 # 포트 명시
 EXPOSE 9000

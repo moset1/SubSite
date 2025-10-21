@@ -84,12 +84,13 @@ jobs:
           passphrase: ${{ secrets.GCP_SSH_PASSPHRASE }}
 
           script: |
+            docker network create subsite-network || true
             docker pull moset1/subsite-user-service:${{ github.sha }}
             
             docker stop user-service-container || true
             docker rm user-service-container || true
             
-            docker run -d --name user-service-container -p 8082:8082 \
+            docker run -d --name user-service-container --network subsite-network -p 8082:8082 \
             -e "SPRING_CONFIG_IMPORT=configserver:http://config-server:9000" \
             -e "SPRING_CLOUD_CONFIG_USERNAME=${{ secrets.CONFIG_SERVER_USERNAME }}" \
             -e "SPRING_CLOUD_CONFIG_PASSWORD=${{ secrets.CONFIG_SERVER_PASSWORD }}" \
