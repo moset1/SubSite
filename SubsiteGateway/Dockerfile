@@ -1,23 +1,48 @@
-# Build 단계
-FROM gradle:8.5-jdk17-alpine AS build
+# =======================================================
+# 1. 빌드(Build) 스테이지
+# =======================================================
+FROM gradle:8.5-jdk17-alpine AS builder
+
+# 작업 디렉토리 설정
 WORKDIR /home/gradle/src
+
+# 빌드에 필요한 최소한의 파일만 먼저 복사
 COPY --chown=gradle:gradle build.gradle settings.gradle ./
 COPY --chown=gradle:gradle gradle ./gradle
 
-# gradle의 daemon을 사용하지 않고 test는 건너뛰기
-# 의존성을 우선 다운로드해서 레어어에 저장
-RUN gradle build --no-daemon -x test
+# 의존성만 명시적으로 다운로드
+RUN gradle dependencies --no-daemon
 
-# 앞선 레이어에 소스코드를 합쳐서 jar 파일 생성
+# 소스 코드 복사
 COPY --chown=gradle:gradle src ./src
+
+# 소스 코드를 포함하여 실제 빌드 실행
 RUN gradle build --no-daemon -x test
 
-# Package 단계
-FROM openjdk:17-jre-slim
-WORKDIR /app
-# build 단계에서 생성된 jar 파일만 복사
-COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
 
+# =======================================================
+# 2. 패키징(Packaging) 스테이지
+# =======================================================
+FROM eclipse-temurin:17-jre-jammy
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 보안 강화를 위해 non-root 사용자 생성
+RUN addgroup --system appuser && adduser --system --ingroup appuser appuser
+
+# 빌드 스테이지에서 생성된 .jar 파일을 복사하고, 소유자를 appuser로 지정
+COPY --from=builder --chown=appuser:appuser /home/gradle/src/build/libs/*.jar app.jar
+
+# 생성한 non-root 사용자로 전환
+USER appuser
+
+# 운영 안정성을 위한 HEALTHCHECK 추가
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD curl -f http://${SERVICE_INNER_IP}:8080/actuator/health || exit 1
+
+# 포트 명시
 EXPOSE 8080
 
+# 최종 실행 명령어
 ENTRYPOINT ["java","-jar","app.jar"]
