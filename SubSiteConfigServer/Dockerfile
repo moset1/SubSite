@@ -22,7 +22,6 @@ RUN gradle build --no-daemon -x test
 
 
 # 2. 패키징 스테이지
-
 FROM eclipse-temurin:17-jre-jammy
 
 # 작업 디렉토리 설정
