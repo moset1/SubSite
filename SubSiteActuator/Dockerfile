@@ -37,7 +37,6 @@ COPY --from=builder --chown=appuser:appuser /home/gradle/src/build/libs/*.jar ap
 # 생성한 non-root 사용자로 전환
 USER appuser
 
-
 # 포트 명시
 EXPOSE 9001
 
