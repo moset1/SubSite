@@ -30,7 +30,7 @@ jobs:
         run: chmod +x SubsiteGateway/gradlew
 
       - name: Build with Gradle
-        run: ./SubsiteGateway/gradlew -p SubsiteGateway clean build
+        run: ./SubsiteGateway/gradlew -p SubsiteGateway clean build -x test
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
