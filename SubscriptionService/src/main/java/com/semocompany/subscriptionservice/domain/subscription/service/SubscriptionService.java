@@ -2,8 +2,7 @@ package com.semocompany.subscriptionservice.domain.subscription.service;
 
 import com.semocompany.subscriptionservice.domain.category.entity.Category;
 import com.semocompany.subscriptionservice.domain.category.repository.CategoryRepository;
-import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTask;
-import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTaskPublisher;
+import com.semocompany.subscriptionservice.domain.crawling.service.RssService;
 import com.semocompany.subscriptionservice.domain.subscription.dto.SubscriptionDTO;
 import com.semocompany.subscriptionservice.domain.subscription.entity.Subscription;
 import com.semocompany.subscriptionservice.domain.subscription.repository.SubscriptionRepository;
@@ -21,7 +20,7 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final CategoryRepository categoryRepository;
-    private final CrawlingTaskPublisher publisher;
+    private final RssService rssService;
 
     @Transactional
     public SubscriptionDTO.Response createSubscription(SubscriptionDTO.CreateRequest request, UUID userId) {
@@ -79,14 +78,7 @@ public class SubscriptionService {
     public void checkUpdatesForUser(UUID userId) {
         List<Subscription> subscriptions = subscriptionRepository.findByCategory_UserId(userId);
         for (Subscription sub : subscriptions) {
-
-            CrawlingTask task = new CrawlingTask(
-                    sub.getId(),
-                    sub.getUrl(),
-                    sub.getType(),
-                    sub.getKeywords()
-            );
-            publisher.publish(task);
+            rssService.processRssSubscription(sub.getId());
         }
     }
 

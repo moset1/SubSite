@@ -2,7 +2,6 @@ package com.semocompany.subscriptionservice.domain.subscription.service;
 
 import com.semocompany.subscriptionservice.domain.category.entity.Category;
 import com.semocompany.subscriptionservice.domain.category.repository.CategoryRepository;
-import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTaskPublisher;
 import com.semocompany.subscriptionservice.domain.subscription.dto.SubscriptionDTO;
 import com.semocompany.subscriptionservice.domain.subscription.entity.Subscription;
 import com.semocompany.subscriptionservice.domain.subscription.entity.SubscriptionType;
@@ -21,7 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -36,9 +34,6 @@ class SubscriptionServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
-
-    @Mock
-    private CrawlingTaskPublisher publisher;
 
     private UUID userId;
     private UUID subscriptionId;

@@ -1,7 +1,6 @@
 package com.semocompany.subscriptionservice.domain.crawling;
 
-import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTask;
-import com.semocompany.subscriptionservice.domain.crawling.task.CrawlingTaskPublisher;
+import com.semocompany.subscriptionservice.domain.crawling.service.RssService;
 import com.semocompany.subscriptionservice.domain.subscription.entity.Subscription;
 import com.semocompany.subscriptionservice.domain.subscription.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 public class SubscriptionScheduler {
 
     private final SubscriptionRepository subscriptionRepository;
-    private final CrawlingTaskPublisher publisher;
+    private final RssService rssService;
 
     @Scheduled(fixedRate = 6000000)
     public void scheduleSubscriptionChecks() {
@@ -29,17 +28,10 @@ public class SubscriptionScheduler {
             return;
         }
 
-        log.info("{} 개의 구독을 확인합니다. Publishing 작업 중...", subscriptions.size());
+        log.info("{} 개의 구독을 확인합니다.", subscriptions.size());
         for (Subscription sub : subscriptions) {
-            CrawlingTask task = new CrawlingTask(
-                    sub.getId(),
-                    sub.getUrl(),
-                    sub.getType(),
-                    sub.getKeywords()
-            );
-            publisher.publish(task);
-
+            rssService.processRssSubscription(sub.getId());
         }
-        log.info("Publishing 작업을 완료했습니다.");
+        log.info("구독 확인 작업을 완료했습니다.");
     }
 }
